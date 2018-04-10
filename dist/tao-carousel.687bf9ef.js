@@ -99,12 +99,12 @@ exports.default = {
             return;
         }
         this.$box = (typeof box === 'undefined' ? 'undefined' : _typeof(box)) === 'object' ? box : document.querySelector(box);
-
         this.addEventListeners();
         this.autoDestroy();
     },
     addEventListeners: function addEventListeners() {
         console.log('addEventListeners');
+        // this.$box.addEventListener('DOMNodeRemoved', () => this.destroy());
     },
     removeEventListeners: function removeEventListeners() {
         console.log('removeEventListeners');
@@ -113,9 +113,8 @@ exports.default = {
         var _this = this;
 
         this.boxChecker = setInterval(function () {
-            console.log(_this.$box);
             // TODO: refactor the checker
-            if (!_this.$box.clientWidth) {
+            if (!document.body.contains(_this.$box)) {
                 clearInterval(_this.boxChecker);
                 _this.destroy();
             }
@@ -138,7 +137,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var config = {};
 var $el = document.querySelector('.carousel');
 _taoCarousel2.default.render($el, config);
-},{"./lib/tao-carousel":8}],11:[function(require,module,exports) {
+},{"./lib/tao-carousel":8}],12:[function(require,module,exports) {
 
 var OVERLAY_ID = '__parcel__error__overlay__';
 
@@ -307,5 +306,5 @@ function hmrAccept(bundle, id) {
     return hmrAccept(global.parcelRequire, id);
   });
 }
-},{}]},{},[11,4])
+},{}]},{},[12,4])
 //# sourceMappingURL=/tao-carousel.687bf9ef.map
