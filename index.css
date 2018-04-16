@@ -1,0 +1,35 @@
+*{
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+/* CAROUSEL */
+.carousel{
+    background: #000;
+    height: auto;
+    width: 100%;
+    cursor: pointer;
+    overflow: hidden;
+    user-select: none;
+}
+
+/* CAROUSEL BOX */
+.carousel-box{
+    width: 25vw;
+    margin: 0 auto;
+    /* height: 10vh; */
+}
+
+/* CAROUSEL CONTENT */
+.carousel-content{
+    display: flex;
+    justify-content: space-around;
+    position: relative;
+}
+
+/* CAROUSEL ITEM */
+.carousel-item{
+    width: 10vw;
+    height: 10vw;
+    background:red;
+}

@@ -77,7 +77,7 @@ parcelRequire = (function (modules, cache, entry) {
 
   // Override the current require with this new one
   return newRequire;
-})({8:[function(require,module,exports) {
+})({106:[function(require,module,exports) {
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -86,45 +86,199 @@ Object.defineProperty(exports, "__esModule", {
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
-exports.default = {
-    $box: null,
-    config: {
-        current: 1,
-        onUpdate: null,
-        preventEvents: false,
-        activeClass: 'active'
-    },
-    render: function render(box, config) {
-        if (!box) {
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var taoCarousel = function () {
+    /**
+     * @param {*} carousel 
+     * @param {*} config 
+     */
+    function taoCarousel(carousel, config) {
+        _classCallCheck(this, taoCarousel);
+
+        if (!carousel) {
             return;
         }
-        this.$box = (typeof box === 'undefined' ? 'undefined' : _typeof(box)) === 'object' ? box : document.querySelector(box);
-        this.addEventListeners();
-        this.autoDestroy();
-    },
-    addEventListeners: function addEventListeners() {
-        console.log('addEventListeners');
-        // this.$box.addEventListener('DOMNodeRemoved', () => this.destroy());
-    },
-    removeEventListeners: function removeEventListeners() {
-        console.log('removeEventListeners');
-    },
-    autoDestroy: function autoDestroy() {
-        var _this = this;
-
-        this.boxChecker = setInterval(function () {
-            // TODO: refactor the checker
-            if (!document.body.contains(_this.$box)) {
-                clearInterval(_this.boxChecker);
-                _this.destroy();
-            }
-        }, 100);
-    },
-    destroy: function destroy() {
-        console.log('destroy');
-        this.removeEventListeners();
+        this.$carousel = null;
+        this.$carouselBox = null;
+        this.$carouselContent = null;
+        this.$carouselItemList = [];
+        this.totalItems = 0;
+        this.moduleWidth = 0;
+        this.startClick = 0;
+        this.endClick = 0;
+        this.isDragging = false;
+        this.config = {
+            carouselBox: '.carousel-box',
+            carouselContent: '.carousel-content',
+            carouselItem: '.carousel-item',
+            current: 1,
+            onUpdate: null,
+            preventEvents: false,
+            activeClass: 'active'
+        };
+        this.config = Object.assign(this.config, config); // {...this.confug, confug}
+        this.$carousel = this.getElement(carousel);
+        this.$carouselBox = this.getElement(this.config.carouselBox, this.$carousel);
+        this.$carouselContent = this.getElement(this.config.carouselContent, this.$carouselBox);
+        this.$carouselItemList = this.getElement(this.config.carouselItem, this.$carouselContent, true);
+        this.totalItems = this.$carouselItemList.length;
+        if (this.$carousel && this.$carouselBox && this.$carouselContent && this.$carouselItemList && this.totalItems) {
+            this.init();
+        }
     }
-};
+
+    _createClass(taoCarousel, [{
+        key: 'init',
+
+        /**
+         * init
+         */
+        value: function init() {
+            this.onMouseDown = this.handleMouseDown.bind(this);
+            this.onMouseUp = this.handleMouseUp.bind(this);
+            this.onDrag = this.handleDrag.bind(this);
+            this.onResize = this.updateSizes.bind(this);
+            // first execution
+            this.updateSizes();
+            this.addEventListeners();
+            this.autoDestroy();
+        }
+    }, {
+        key: 'getElement',
+
+        /**
+         * getElements
+         * @param {*} value 
+         * @param {boolean} multiple 
+         */
+        value: function getElement(value) {
+            var father = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : document;
+            var multiple = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+
+            return (typeof value === 'undefined' ? 'undefined' : _typeof(value)) === 'object' ? value : father[multiple ? 'querySelectorAll' : 'querySelector'](value);
+        }
+    }, {
+        key: 'updateSizes',
+
+        /**
+         * updateSizes
+         */
+        value: function updateSizes() {
+            this.moduleWidth = this.$carouselBox.clientWidth;
+            this.updateContentSize();
+        }
+    }, {
+        key: 'handleMouseDown',
+
+        /**
+         * handleMouseDown
+         * @param {event} event 
+         */
+        value: function handleMouseDown(event) {
+            this.isDragging = true;
+            this.startClick = event.offsetX;
+            window.addEventListener('mousemove', this.onDrag);
+        }
+    }, {
+        key: 'handleMouseUp',
+
+        /**
+         * handleMouseUp
+         * @param {event} event 
+         */
+        value: function handleMouseUp(event) {
+            if (!this.isDragging) {
+                return;
+            }
+            this.isDragging = false;
+            this.endClick = event.offsetX;
+            window.removeEventListener('mousemove', this.onDrag);
+            console.log(this.endClick, this.isDragging);
+        }
+    }, {
+        key: 'handleDrag',
+
+        /**
+         * handleDrag
+         * @param {event} event 
+         */
+        value: function handleDrag(event) {
+            // this.$carousel.style.left = `${}`;
+            if (this.isDragging) {
+                console.log('isDragging', event.clientX);
+            }
+        }
+    }, {
+        key: 'updateContentSize',
+
+        /**
+         * updateContentSize
+         */
+        value: function updateContentSize() {
+            this.$carouselContent.style.width = this.moduleWidth * this.totalItems + 'px';
+        }
+    }, {
+        key: 'addEventListeners',
+
+        /**
+         * addEventListeners
+         */
+        value: function addEventListeners() {
+            console.log('addEventListeners');
+            this.$carousel.addEventListener('mousedown', this.onMouseDown);
+            window.addEventListener('mouseup', this.onMouseUp);
+            window.addEventListener('resize', this.onResize);
+        }
+    }, {
+        key: 'removeEventListeners',
+
+        /**
+         * removeEventListeners
+         */
+        value: function removeEventListeners() {
+            console.log('removeEventListeners');
+            this.$carousel.removeEventListener('mousedown', this.onMouseDown);
+            window.removeEventListener('mouseup', this.onMouseUp);
+            window.removeEventListener('resize', this.onResize);
+        }
+    }, {
+        key: 'autoDestroy',
+
+        /**
+         * autoDestroy
+         */
+        value: function autoDestroy() {
+            var _this = this;
+
+            this.carouselChecker = setInterval(function () {
+                // TODO: refactor the checker
+                if (!document.body.contains(_this.$carousel)) {
+                    clearInterval(_this.carouselChecker);
+                    _this.destroy();
+                }
+            }, 100);
+        }
+    }, {
+        key: 'destroy',
+
+        /**
+         * destroy
+         */
+        value: function destroy() {
+            console.log('destroy');
+            this.removeEventListeners();
+        }
+    }]);
+
+    return taoCarousel;
+}();
+
+;
+
+exports.default = taoCarousel;
 },{}],4:[function(require,module,exports) {
 'use strict';
 
@@ -134,10 +288,18 @@ var _taoCarousel2 = _interopRequireDefault(_taoCarousel);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var config = {};
+var config = {
+    // carouselBox: '.carousel-box',
+    // carouselContent: '.carousel-content',
+    // carouselItem: '.carousel-item',
+};
 var $el = document.querySelector('.carousel');
-_taoCarousel2.default.render($el, config);
-},{"./lib/tao-carousel":8}],12:[function(require,module,exports) {
+var carousel = new _taoCarousel2.default($el, config);
+// setTimeout(() => {
+//     carousel.destroy();
+// }, 5000);
+// taoCarousel.create($el, config);
+},{"./lib/tao-carousel":106}],119:[function(require,module,exports) {
 
 var OVERLAY_ID = '__parcel__error__overlay__';
 
@@ -306,5 +468,5 @@ function hmrAccept(bundle, id) {
     return hmrAccept(global.parcelRequire, id);
   });
 }
-},{}]},{},[12,4])
+},{}]},{},[119,4])
 //# sourceMappingURL=/tao-carousel.687bf9ef.map
