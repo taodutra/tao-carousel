@@ -1324,11 +1324,15 @@ var taoCarousel = function () {
         this.startClick = 0;
         this.endClick = 0;
         this.isDragging = false;
+        this.draggingHistory = [];
+        this.currentSlide = 1;
+        this.currentX = 0;
+        this.draggingX = 0;
         this.config = {
             carouselBox: '.carousel-box',
             carouselContent: '.carousel-content',
             carouselItem: '.carousel-item',
-            current: 1,
+            // current: 1,
             onUpdate: null,
             preventEvents: false,
             activeClass: 'active'
@@ -1393,7 +1397,7 @@ var taoCarousel = function () {
          */
         value: function handleMouseDown(event) {
             this.isDragging = true;
-            this.startClick = event.offsetX;
+            this.startClick = event.clientX;
             window.addEventListener('mousemove', this.onDrag);
         }
     }, {
@@ -1408,9 +1412,10 @@ var taoCarousel = function () {
                 return;
             }
             this.isDragging = false;
-            this.endClick = event.offsetX;
+            this.endClick = event.clientX;
             window.removeEventListener('mousemove', this.onDrag);
-            console.log(this.endClick, this.isDragging);
+            this.handleStopDragging();
+            // console.log(this.endClick, this.isDragging);
         }
     }, {
         key: 'handleDrag',
@@ -1422,8 +1427,22 @@ var taoCarousel = function () {
         value: function handleDrag(event) {
             // this.$carousel.style.left = `${}`;
             if (this.isDragging) {
-                console.log('isDragging', event.clientX);
+                var x = event.clientX;
+                this.updateContentPosition(x);
+                this.draggingHistory.push(x);
+                // console.log('isDragging', event.clientX);
             }
+        }
+    }, {
+        key: 'handleStopDragging',
+
+        /**
+         * handleStopDragging
+         */
+        value: function handleStopDragging() {
+            console.log(this.draggingHistory);
+            this.currentX = this.draggingX;
+            this.draggingHistory = [];
         }
     }, {
         key: 'updateContentSize',
@@ -1433,6 +1452,19 @@ var taoCarousel = function () {
          */
         value: function updateContentSize() {
             this.$carouselContent.style.width = this.moduleWidth * this.totalItems + 'px';
+        }
+    }, {
+        key: 'updateContentPosition',
+
+        /**
+         * updateContentPosition
+         * @param {Number} x 
+         */
+        value: function updateContentPosition() {
+            var x = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
+
+            this.draggingX = this.currentX + x - this.startClick;
+            this.$carouselContent.style.transform = 'translate3d(' + this.draggingX + 'px, 0, 0)';
         }
     }, {
         key: 'addEventListeners',
