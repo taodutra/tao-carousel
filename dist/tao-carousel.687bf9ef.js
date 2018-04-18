@@ -1321,6 +1321,7 @@ var taoCarousel = function () {
         this.$carouselItemList = [];
         this.totalItems = 0;
         this.moduleWidth = 0;
+        this.contentWidth = 0;
         this.startClick = 0;
         this.endClick = 0;
         this.isDragging = false;
@@ -1451,7 +1452,8 @@ var taoCarousel = function () {
          * updateContentSize
          */
         value: function updateContentSize() {
-            this.$carouselContent.style.width = this.moduleWidth * this.totalItems + 'px';
+            this.contentWidth = this.moduleWidth * this.totalItems;
+            this.$carouselContent.style.width = this.contentWidth + 'px';
         }
     }, {
         key: 'updateContentPosition',
@@ -1464,6 +1466,7 @@ var taoCarousel = function () {
             var x = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
 
             this.draggingX = this.currentX + x - this.startClick;
+            this.draggingX = this.draggingX > 0 ? 0 : Math.max(this.draggingX, -(this.contentWidth - this.moduleWidth));
             this.$carouselContent.style.transform = 'translate3d(' + this.draggingX + 'px, 0, 0)';
         }
     }, {
@@ -1544,7 +1547,7 @@ var carousel = new _taoCarousel2.default($el, config);
 //     carousel.destroy();
 // }, 5000);
 // taoCarousel.create($el, config);
-},{"./lib/tao-carousel":5}],84:[function(require,module,exports) {
+},{"./lib/tao-carousel":5}],93:[function(require,module,exports) {
 
 var OVERLAY_ID = '__parcel__error__overlay__';
 
@@ -1713,5 +1716,5 @@ function hmrAccept(bundle, id) {
     return hmrAccept(global.parcelRequire, id);
   });
 }
-},{}]},{},[84,3])
+},{}]},{},[93,3])
 //# sourceMappingURL=/tao-carousel.687bf9ef.map
