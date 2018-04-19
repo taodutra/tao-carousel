@@ -1,4 +1,6 @@
 {
+  "name": "tao-carousel",
+  "version": "0.5",
   "dependencies": {
     "babel-polyfill": "^6.23.0"
   },

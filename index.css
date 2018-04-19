@@ -3,13 +3,14 @@
     padding: 0;
     list-style: none;
 }
+
 /* CAROUSEL */
-.carousel{
+.carouselAll{
     /* background: #000; */
     height: auto;
     width: 100%;
     cursor: pointer;
-    overflow: hidden;
+    overflow-x: hidden;
     user-select: none;
     touch-action: none;
 }
@@ -20,16 +21,23 @@
 
 /* CAROUSEL BOX */
 .carousel-box{
-    width: 30vw;
+    width: 35vw;
     margin: 0 auto;
     /* background: #000;  */
     /* height: 10vh; */
+}
+
+@media (min-width: 768px){
+    .carousel-box{
+        width: 11vw;
+    }
 }
 
 /* CAROUSEL CONTENT */
 .carousel-content{
     display: flex;
     justify-content: space-around;
+    align-content: center;
     position: relative;
     transition: transform 0.25s ease-out;
 }
@@ -37,24 +45,32 @@
 /* CAROUSEL ITEM */
 .carousel-item{
     width: 25vw;
-    height: 25vw;
-    background: #999;
+    /* height: 25vw; */
+    /* background: #999; */
     position: relative;
-    opacity: 0.5;
+    opacity: 0.25;
     transform: scale(0.9);
     transition: all 0.25s ease-out;
+    display: flex;
+    align-items: center;
 }
 .carousel-item.active{
     transform: scale(1);
     opacity: 1;
 }
 
+@media (min-width: 768px){
+    .carousel-item{
+        width: 10vw;
+    }
+}
+
 .carousel-img{
     width: 100%;
     height: auto;
     pointer-events: none;
-    position: absolute;
+    /* position: absolute;
     left: 50%;
     top: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%); */
 }

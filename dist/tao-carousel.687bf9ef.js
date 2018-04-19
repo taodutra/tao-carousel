@@ -1360,6 +1360,7 @@ var taoCarousel = function () {
             this.onMouseUp = this.handleMouseUp.bind(this);
             this.onDrag = this.handleDrag.bind(this);
             this.onResize = this.updateSizes.bind(this);
+            this.preventWindowScroll = this.handleWindowScroll.bind(this);
             // first execution
             this.updateSizes();
             this.addEventListeners();
@@ -1391,16 +1392,27 @@ var taoCarousel = function () {
             this.updateContentSize();
         }
     }, {
-        key: 'handleMouseDown',
-
+        key: 'handleWindowScroll',
+        value: function handleWindowScroll(event) {
+            console.log(event);
+            // event.preventDefault();
+            // event.stopPropagation();
+        }
         /**
          * handleMouseDown
          * @param {event} event 
          */
+
+    }, {
+        key: 'handleMouseDown',
         value: function handleMouseDown(event) {
+            event.preventDefault();
+            event.stopPropagation();
             this.isDragging = true;
-            this.startClick = event.clientX;
+            this.startClick = event.touches ? event.touches[0].pageX : event.clientX;
+            console.log(this.startClick);
             window.addEventListener('mousemove', this.onDrag);
+            window.addEventListener('touchmove', this.onDrag);
         }
     }, {
         key: 'handleMouseUp',
@@ -1416,6 +1428,7 @@ var taoCarousel = function () {
             this.isDragging = false;
             this.endClick = event.clientX;
             window.removeEventListener('mousemove', this.onDrag);
+            window.removeEventListener('touchmove', this.onDrag);
             this.handleStopDragging();
             // console.log(this.endClick, this.isDragging);
         }
@@ -1429,9 +1442,10 @@ var taoCarousel = function () {
         value: function handleDrag(event) {
             // this.$carousel.style.left = `${}`;
             if (this.isDragging) {
-                var x = event.clientX;
+                var x = event.touches ? event.touches[0].pageX : event.clientX;
                 this.updateContentPosition(x);
                 this.draggingHistory.push(x);
+                window.addEventListener('touchmove', this.preventWindowScroll);
                 // console.log('isDragging', event.clientX);
             }
         }
@@ -1508,7 +1522,9 @@ var taoCarousel = function () {
          * addEventListeners
          */
         value: function addEventListeners() {
+            this.$carousel.addEventListener('touchstart', this.onMouseDown);
             this.$carousel.addEventListener('mousedown', this.onMouseDown);
+            window.addEventListener('touchend', this.onMouseUp);
             window.addEventListener('mouseup', this.onMouseUp);
             window.addEventListener('resize', this.onResize);
         }
@@ -1519,7 +1535,9 @@ var taoCarousel = function () {
          * removeEventListeners
          */
         value: function removeEventListeners() {
+            this.$carousel.removeEventListener('touchstart', this.onMouseDown);
             this.$carousel.removeEventListener('mousedown', this.onMouseDown);
+            window.removeEventListener('touchend', this.onMouseUp);
             window.removeEventListener('mouseup', this.onMouseUp);
             window.removeEventListener('resize', this.onResize);
         }
@@ -1574,11 +1592,14 @@ var config = {
 };
 var $el = document.querySelector('.carousel');
 var carousel = new _taoCarousel2.default($el, config);
+
+var carouselJuan = new _taoCarousel2.default('.juan');
+var carouselThiago = new _taoCarousel2.default('.thiago');
 // setTimeout(() => {
 //     carousel.destroy();
 // }, 5000);
 // taoCarousel.create($el, config);
-},{"./lib/tao-carousel":5}],96:[function(require,module,exports) {
+},{"./lib/tao-carousel":5}],105:[function(require,module,exports) {
 
 var OVERLAY_ID = '__parcel__error__overlay__';
 
@@ -1747,5 +1768,5 @@ function hmrAccept(bundle, id) {
     return hmrAccept(global.parcelRequire, id);
   });
 }
-},{}]},{},[96,3])
+},{}]},{},[105,3])
 //# sourceMappingURL=/tao-carousel.687bf9ef.map
