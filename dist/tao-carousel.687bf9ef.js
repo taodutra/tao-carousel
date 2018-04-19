@@ -1326,7 +1326,7 @@ var taoCarousel = function () {
         this.endClick = 0;
         this.isDragging = false;
         this.draggingHistory = [];
-        this.currentSlide = 1;
+        this.currentSlide = 0;
         this.currentX = 0;
         this.draggingX = 0;
         this.config = {
@@ -1338,7 +1338,7 @@ var taoCarousel = function () {
             preventEvents: false,
             activeClass: 'active'
         };
-        this.config = (0, _extends3.default)({}, this.config, { config: config });
+        this.config = (0, _extends3.default)({}, this.config, config);
         this.$carousel = this.getElement(carousel);
         this.$carouselBox = this.getElement(this.config.carouselBox, this.$carousel);
         this.$carouselContent = this.getElement(this.config.carouselContent, this.$carouselBox);
@@ -1363,6 +1363,7 @@ var taoCarousel = function () {
             // first execution
             this.updateSizes();
             this.addEventListeners();
+            this.updateCurrentSlide();
             this.autoDestroy();
         }
     }, {
@@ -1441,8 +1442,8 @@ var taoCarousel = function () {
          * handleStopDragging
          */
         value: function handleStopDragging() {
-            console.log(this.draggingHistory);
-            this.currentX = this.draggingX;
+            var activeSlide = Math.abs(Math.round(this.draggingX / this.moduleWidth));
+            this.updateCurrentSlide(activeSlide);
             this.draggingHistory = [];
         }
     }, {
@@ -1470,13 +1471,43 @@ var taoCarousel = function () {
             this.$carouselContent.style.transform = 'translate3d(' + this.draggingX + 'px, 0, 0)';
         }
     }, {
+        key: 'goToSlide',
+
+        /**
+         * goToSlide
+         * @param {number} index 
+         */
+        value: function goToSlide() {
+            var index = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
+
+            this.$carouselContent.style.transform = 'translate3d(-' + index * this.moduleWidth + 'px, 0, 0)';
+        }
+    }, {
+        key: 'updateCurrentSlide',
+
+        /**
+         * updateCurrentSlide
+         * @param {number} index 
+         */
+        value: function updateCurrentSlide() {
+            var _this = this;
+
+            var index = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
+
+            this.currentSlide = index;
+            this.currentX = index * this.moduleWidth * -1;
+            this.goToSlide(index);
+            this.$carouselItemList.forEach(function (slide, i) {
+                slide.classList[i === index ? 'add' : 'remove'](_this.config.activeClass);
+            });
+        }
+    }, {
         key: 'addEventListeners',
 
         /**
          * addEventListeners
          */
         value: function addEventListeners() {
-            console.log('addEventListeners');
             this.$carousel.addEventListener('mousedown', this.onMouseDown);
             window.addEventListener('mouseup', this.onMouseUp);
             window.addEventListener('resize', this.onResize);
@@ -1488,7 +1519,6 @@ var taoCarousel = function () {
          * removeEventListeners
          */
         value: function removeEventListeners() {
-            console.log('removeEventListeners');
             this.$carousel.removeEventListener('mousedown', this.onMouseDown);
             window.removeEventListener('mouseup', this.onMouseUp);
             window.removeEventListener('resize', this.onResize);
@@ -1500,13 +1530,13 @@ var taoCarousel = function () {
          * autoDestroy
          */
         value: function autoDestroy() {
-            var _this = this;
+            var _this2 = this;
 
             this.carouselChecker = setInterval(function () {
                 // TODO: refactor the checker
-                if (!document.body.contains(_this.$carousel)) {
-                    clearInterval(_this.carouselChecker);
-                    _this.destroy();
+                if (!document.body.contains(_this2.$carousel)) {
+                    clearInterval(_this2.carouselChecker);
+                    _this2.destroy();
                 }
             }, 100);
         }
@@ -1537,6 +1567,7 @@ var _taoCarousel2 = _interopRequireDefault(_taoCarousel);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var config = {
+    // activeClass: 'active',
     // carouselBox: '.carousel-box',
     // carouselContent: '.carousel-content',
     // carouselItem: '.carousel-item',
@@ -1547,7 +1578,7 @@ var carousel = new _taoCarousel2.default($el, config);
 //     carousel.destroy();
 // }, 5000);
 // taoCarousel.create($el, config);
-},{"./lib/tao-carousel":5}],93:[function(require,module,exports) {
+},{"./lib/tao-carousel":5}],96:[function(require,module,exports) {
 
 var OVERLAY_ID = '__parcel__error__overlay__';
 
@@ -1716,5 +1747,5 @@ function hmrAccept(bundle, id) {
     return hmrAccept(global.parcelRequire, id);
   });
 }
-},{}]},{},[93,3])
+},{}]},{},[96,3])
 //# sourceMappingURL=/tao-carousel.687bf9ef.map

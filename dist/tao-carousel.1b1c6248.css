@@ -20,8 +20,9 @@
 
 /* CAROUSEL BOX */
 .carousel-box{
-    width: 80vw;
+    width: 30vw;
     margin: 0 auto;
+    /* background: #000;  */
     /* height: 10vh; */
 }
 
@@ -35,10 +36,17 @@
 
 /* CAROUSEL ITEM */
 .carousel-item{
-    width: 75vw;
-    height: 30vw;
+    width: 25vw;
+    height: 25vw;
     background: #999;
     position: relative;
+    opacity: 0.5;
+    transform: scale(0.9);
+    transition: all 0.25s ease-out;
+}
+.carousel-item.active{
+    transform: scale(1);
+    opacity: 1;
 }
 
 .carousel-img{

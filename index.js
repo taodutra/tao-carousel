@@ -1,6 +1,7 @@
 import taoCarousel from './lib/tao-carousel';
 
 const config = {
+    // activeClass: 'active',
     // carouselBox: '.carousel-box',
     // carouselContent: '.carousel-content',
     // carouselItem: '.carousel-item',
